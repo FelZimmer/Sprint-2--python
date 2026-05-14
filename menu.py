@@ -1,110 +1,275 @@
 import threading
 import datetime
 import json
+import os
 
 animais_chave = [
     "animal", "animais", "cachorro", "gato",
     "passaro", "pássaro", "cobra", "coelho",
     "hamster", "tigre", "leao", "leão",
-    "urso", "macaco"
+    "urso", "macaco", "elefante", "girafa",
+    "zebra", "lobo", "raposa", "papagaio",
+    "peixe", "tartaruga", "cavalo", "vaca",
+    "porco", "ovelha", "galinha", "pato",
+    "coruja", "aguia", "águia", "jacare",
+    "jacaré", "golfinho", "baleia", "pinguim"
 ]
 
 natureza_chave = [
     "floresta", "montanha", "rio", "mar",
     "praia", "arvore", "árvore", "campo",
     "flores", "natureza", "céu", "ceu",
-    "grama", "sol"
+    "grama", "sol", "lua", "estrela",
+    "cachoeira", "vento", "chuva", "tempestade",
+    "nuvem", "deserto", "selva", "ilha",
+    "oceano", "lago", "pedra", "vulcao",
+    "vulcão", "neve", "trilha", "paisagem",
+    "jardim", "folha", "plantas", "mata"
 ]
 
 estudos_chave = [
     "livro", "caderno", "caneta", "lapis",
     "lápis", "lousa", "professor", "escola",
     "faculdade", "estudo", "matematica",
-    "matemática", "mochila"
+    "matemática", "mochila", "aluno", "universidade",
+    "apostila", "prova", "lição", "licao",
+    "atividade", "classe", "aula", "biblioteca",
+    "quadro", "ensino", "curso", "redação",
+    "redacao", "geografia", "historia", "história",
+    "quimica", "química", "fisica", "física"
 ]
 
 comida_chave = [
     "pizza", "hamburguer", "hambúrguer",
     "bolo", "comida", "macarrao", "macarrão",
-    "lanche", "sushi", "café", "cafe"
+    "lanche", "sushi", "café", "cafe",
+    "sorvete", "refrigerante", "suco", "pastel",
+    "batata", "batata frita", "chocolate",
+    "doce", "biscoito", "cookie", "salada",
+    "frango", "carne", "arroz", "feijao",
+    "feijão", "torta", "coxinha", "brigadeiro",
+    "pão", "pao", "queijo", "lasanha"
 ]
 
 tecnologia_chave = [
     "computador", "notebook", "mouse",
     "teclado", "programacao", "programação",
-    "codigo", "código", "celular", "monitor"
+    "codigo", "código", "celular", "monitor",
+    "internet", "wifi", "wi-fi", "tablet",
+    "smartphone", "servidor", "processador",
+    "memoria", "memória", "hardware", "software",
+    "inteligencia artificial", "ia", "chatbot",
+    "site", "aplicativo", "app", "linux",
+    "windows", "android", "iphone", "javascript",
+    "python", "java", "banco de dados", "rede"
 ]
 
+def limpar():
+    try:
+        os.system("cls")
+    except:
+        os.system("clear")
+
+def carregar_dados():
+    try:
+        with open("galeria.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    except Exception as e:
+        print(f"Erro ao carregar dados: {e}")
+
+def salvar_dados(dados):
+    try:
+        with open("galeria.json", "w", encoding="utf-8") as f:
+            json.dump(dados, f, ensure_ascii=False, indent=4)
+
+    except Exception as e:
+        print(f"Erro ao salvar dados: {e}")
 
 def menu():
     print("\nBem vindo à galeria do seu celular!\n")
-    print("1 - Ver galeria\n")
-    print("2 - Procurar foto\n")
-    print("3 - Adicionar foto\n")
-    print("4 - Excluir foto\n")
-    print("5 - foto temporaria\n")
+    print("1 - Ver galeria")
+    print("2 - Procurar foto")
+    print("3 - Adicionar foto")
+    print("4 - Excluir foto")
+    print("5 - Foto temporária")
+    print("6 - Ver fotos antigas")
+    print("0 - Sair")
 
+def menu_pesquisa():
+    print("\nPesquisar por: \n")
+    print("1 - Nome / Descrição")
+    print("2 - Categoria")
+
+def menu_categoria():
+    print("\nCategorias: \n")
+    print("1 - Animais")
+    print("2 - Natureza")
+    print("3 - Estudos")
+    print("4 - Comida")
+    print("5 - Tecnologia")
+    print("6 - Outros")
 
 def menu_temporaria():
-    print("\nEscolha uma opção de foto temporária: \n")
-    print("1 - Em um dia\n")
-    print("2 - Uma semana \n")
-    print("3 - Um mês\n")
-    print("4 - Um ano\n")
-    print("5 - 15 segundos\n")
-
+    print("\nFoto Temporária\n")
+    print("1 - 1 dia")
+    print("2 - 1 semana")
+    print("3 - 1 mês")
+    print("4 - 1 ano")
+    print("5 - 15 segundos")
 
 def galeria():
-    try:
-        with open('galeria.json', "r", encoding="utf-8") as f:
-            dados = json.load(f)
+    dados = carregar_dados()
 
-            for i in dados["fotos"]:
-                print(
-                    f" Foto: {i['foto']} - Descrição: {i['descricao']} - Categoria: {i['categoria']} - Data: {i['data']} - Temporária: {i['is_temporaria']} - Tempo de vida: {i['tempo_vida']}")
-    except Exception as e:
-        print(f"Ocorreu um erro: {e}")
+    if not dados["fotos"]:
+        print("Galeria vazia.")
+        return
 
+    for foto in dados["fotos"]:
+        print(
+            f"\nFoto: {foto['foto'].capitalize()}"
+            f"\nDescrição: {foto['descricao'].capitalize()}"
+            f"\nCategoria: {foto['categoria'].capitalize()}"
+            f"\nData: {foto['data']}"
+            f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+            f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+        )
 
 def procurar_foto():
+    dados = carregar_dados()
+    menu_pesquisa()
     try:
-        with open('galeria.json', "r", encoding="utf-8") as f:
-            dados = json.load(f)
+        match int(input("Digite o número: ")):
+            case 1:
+                
+                busca = input("Digite o nome ou descrição da foto: ").lower()
 
-        fotos = dados["fotos"]
+                encontrada = False
 
-        busca = input("Digite o nome da foto: ").lower()
+                for foto in dados["fotos"]:
 
-        encontrada = False
+                    nome = foto.get("foto", "").lower()
+                    descricao = foto.get("descricao", "").lower()
 
-        for foto in fotos:
+                    if busca in nome or busca in descricao:
 
-            nome = str(foto.get("foto", "")).lower()
-            descricao = str(foto.get("descricao", "")).lower()
+                        print(
+                        f"\nFoto: {foto['foto'].capitalize()}"
+                        f"\nDescrição: {foto['descricao'].capitalize()}"
+                        f"\nCategoria: {foto['categoria'].capitalize()}"
+                        f"\nData: {foto['data']}"
+                        f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                        f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+                        )
 
-            if busca == nome or busca == descricao:
-                print(
-                    f"\nFoto: {foto.get('foto', 'N/A')} | "
-                    f"Descrição: {foto.get('descricao', 'N/A')} | "
-                    f"Data: {foto.get('data', 'N/A')} | "
-                    f"Temporária: {foto.get('is_temporaria', False)} | "
-                    f"Tempo de vida: {foto.get('tempo_vida', 'N/A')}"
-                )
+                        encontrada = True
 
-                encontrada = True
-                break
+                if not encontrada:
+                    print("Nenhuma foto encontrada.")
 
-        if not encontrada:
-            print("Nenhuma foto encontrada.")
+            case 2:
+                menu_categoria()
 
-        return
+                match int(input("Digite o número correspondente à categoria desejada: ")):
+                    case 1:
+                        if not dados["fotos"]:
+                            print("Galeria vazia.")
+                            return
 
-    except Exception as e:
-        print(f"Ocorreu um erro: {e}")
-        return
+                        for foto in dados["fotos"]:
+                            if foto["categoria"] == "animal":
+                                print(
+                                    f"\nFoto: {foto['foto'].capitalize()}"
+                                    f"\nDescrição: {foto['descricao'].capitalize()}"
+                                    f"\nCategoria: {foto['categoria'].capitalize()}"
+                                    f"\nData: {foto['data']}"
+                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+                                )
+                    case 2:
+                        if not dados["fotos"]:
+                            print("Galeria vazia.")
+                            return
 
+                        for foto in dados["fotos"]:
+                            if foto["categoria"] == "natureza":
+                                print(
+                                    f"\nFoto: {foto['foto'].capitalize()}"
+                                    f"\nDescrição: {foto['descricao'].capitalize()}"
+                                    f"\nCategoria: {foto['categoria'].capitalize()}"
+                                    f"\nData: {foto['data']}"
+                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+                                )
+                    case 3:
+                        if not dados["fotos"]:
+                            print("Galeria vazia.")
+                            return
 
+                        for foto in dados["fotos"]:
+                            if foto["categoria"] == "estudos":
+                                print(
+                                    f"\nFoto: {foto['foto'].capitalize()}"
+                                    f"\nDescrição: {foto['descricao'].capitalize()}"
+                                    f"\nCategoria: {foto['categoria'].capitalize()}"
+                                    f"\nData: {foto['data']}"
+                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+                                )
+                    case 4:
+                        if not dados["fotos"]:
+                            print("Galeria vazia.")
+                            return
+
+                        for foto in dados["fotos"]:
+                            if foto["categoria"] == "comida":
+                                print(
+                                    f"\nFoto: {foto['foto'].capitalize()}"
+                                    f"\nDescrição: {foto['descricao'].capitalize()}"
+                                    f"\nCategoria: {foto['categoria'].capitalize()}"
+                                    f"\nData: {foto['data']}"
+                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+                                )
+                    case 5:
+                        if not dados["fotos"]:
+                            print("Galeria vazia.")
+                            return
+
+                        for foto in dados["fotos"]:
+                            if foto["categoria"] == "tecnologia":
+                                print(
+                                    f"\nFoto: {foto['foto'].capitalize()}"
+                                    f"\nDescrição: {foto['descricao'].capitalize()}"
+                                    f"\nCategoria: {foto['categoria'].capitalize()}"
+                                    f"\nData: {foto['data']}"
+                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+                                )
+                    case 6:
+                        if not dados["fotos"]:
+                            print("Galeria vazia.")
+                            return
+
+                        for foto in dados["fotos"]:
+                            if foto["categoria"] == "outros":
+                                print(
+                                    f"\nFoto: {foto['foto'].capitalize()}"
+                                    f"\nDescrição: {foto['descricao'].capitalize()}"
+                                    f"\nCategoria: {foto['categoria'].capitalize()}"
+                                    f"\nData: {foto['data']}"
+                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+                                )
+            case _:
+                print("Opção inválida.")
+                return
+
+    except ValueError:
+        print("Digite apenas números.")
+    
 def detectar_categoria(nome, descricao):
+
     texto = f"{nome} {descricao}".lower()
 
     categorias = {
@@ -124,96 +289,73 @@ def detectar_categoria(nome, descricao):
 
     return "outros"
 
+def adicionar_foto(nome, descricao, is_temporaria=False, tempo_vida=None):
 
-def adicionar_foto():
-    try:
-        while True:
-            with open('galeria.json', "r", encoding="utf-8") as f:
-                fotos = json.load(f)
+    dados = carregar_dados()
 
-            nome = str(input("Digite o nome da foto: ")).lower()
-            existe = False
+    for foto in dados["fotos"]:
 
-            for i in fotos["fotos"]:
-                if nome == i['foto'].lower():
-                    print("Foto já existe!")
-                    existe = True
-                    break
+        if nome.lower() == foto["foto"].lower():
+            print("Erro: Já existe uma foto com esse nome.")
+            return
 
-            if existe:
-                print("Erro: Já existe uma foto com esse nome!")
-                break
+    nova_foto = {
+        "foto": nome,
+        "descricao": descricao,
+        "data": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
+        "is_temporaria": is_temporaria,
+        "tempo_vida": tempo_vida,
+        "categoria": detectar_categoria(nome, descricao)
+    }
 
-            else:
-                descricao = str(input("Digite a descrição da foto: "))
+    dados["fotos"].append(nova_foto)
 
-                fotos["fotos"].append({
-                    "foto": nome,
-                    "descricao": descricao,
-                    "data": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
-                    "is_temporaria": False,
-                    "tempo_vida": None,
-                    "categoria": detectar_categoria(nome, descricao)
-                })
-                print("Foto tirada com sucesso!")
+    salvar_dados(dados)
 
-            with open('galeria.json', "w", encoding="utf-8") as f:
-                json.dump(fotos, f, ensure_ascii=False, indent=4)
-                print("Foto tirada com sucesso!")
-            break
-        return
-
-    except Exception as e:
-        print(f"Ocorreu um erro: {e}")
-
+    print("Foto adicionada com sucesso!")
 
 def excluir_foto():
-    try:
 
-        with open('galeria.json', "r", encoding="utf-8") as f:
-            fotos = json.load(f)
+    dados = carregar_dados()
 
-        nome = str(input("Digite o nome da foto que deseja excluir: ")).lower()
-        for i in fotos["fotos"]:
-            if nome == i['foto'].lower():
-                fotos["fotos"].remove(i)
-                print("Foto excluída com sucesso")
+    nome = input("Digite o nome da foto que deseja excluir: ").lower()
 
-        with open('galeria.json', "w", encoding="utf-8") as f:
-            json.dump(fotos, f, ensure_ascii=False, indent=4)
+    for foto in dados["fotos"]:
 
+        if nome == foto["foto"].lower():
+
+            dados["fotos"].remove(foto)
+
+            salvar_dados(dados)
+
+            print("Foto excluída com sucesso!")
             return
-    except Exception as e:
-        print(f"Ocorreu um erro: {e}")
 
+    print("Foto não encontrada.")
 
 def remover_foto(nome):
-    with open("galeria.json", "r", encoding="utf-8") as f:
-        dados = json.load(f)
 
-    fotos = dados["fotos"]
+    dados = carregar_dados()
 
-    for foto in fotos:
+    for foto in dados["fotos"]:
+
         if foto["foto"] == nome:
-            fotos.remove(foto)
-            break
 
-    with open("galeria.json", "w", encoding="utf-8") as f:
-        json.dump(dados, f, ensure_ascii=False, indent=4)
+            dados["fotos"].remove(foto)
 
-    print(f"Foto '{nome}' removida!")
+            salvar_dados(dados)
 
+            print(f"\nFoto '{nome}' removida automaticamente!")
+            return
 
 def foto_temporaria():
+
+    nome = input("Digite o nome da foto temporária: ")
+    descricao = input("Digite a descrição da foto temporária: ")
+
+    menu_temporaria()
+
     try:
-        with open('galeria.json', "r", encoding="utf-8") as f:
-            dados = json.load(f)
-
-        nome = input("Digite o nome da foto temporária: ")
-        descricao = input("Digite a descrição da foto temporária: ")
-
-        menu_temporaria()
-
         match int(input("Digite o número: ")):
             case 1:
                 segundos = 86400
@@ -225,21 +367,11 @@ def foto_temporaria():
                 segundos = 31536000
             case 5:
                 segundos = 15
+            case _:
+                print("Opção inválida.")
+                return
 
-        dados["fotos"].append({
-            "foto": nome,
-            "descricao": descricao,
-            "data": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
-            "is_temporaria": True,
-            "tempo_vida": segundos,
-            "categoria": detectar_categoria(nome, descricao)
-
-        })
-
-        with open('galeria.json', "w", encoding="utf-8") as f:
-            json.dump(dados, f, ensure_ascii=False, indent=4)
-
-        print("Foto temporária adicionada com sucesso!")
+        adicionar_foto(nome, descricao, True, segundos)
 
         temporizador = threading.Timer(
             segundos,
@@ -248,54 +380,89 @@ def foto_temporaria():
 
         temporizador.start()
 
-
-    except Exception as e:
-        print(f"Ocorreu um erro: {e}")
-
-lista_tres_meses = {}
-lista_seis_meses = {}
-lista_ano = {}
+    except ValueError:
+        print("Digite apenas números.")
 
 def calcular_tempo_vida():
-    with open('galeria.json', "r", encoding="utf-8") as f:
-        dados = json.load(f)
-    for i in dados["fotos"]:
-        data_agr = datetime.datetime.now()
-        data_foto = datetime.datetime.strptime(i["data"], "%d-%m-%Y %H:%M")
 
-        delta = data_agr - data_foto
-        diferenca = delta.days
-        print(diferenca)
-        if diferenca >= 90:
-            lista_tres_meses['foto', 'descricao']= i["foto"], i["descricao"]
-            print(lista_tres_meses)
+    dados = carregar_dados()
+
+    if not dados["fotos"]:
+        print("Nenhuma foto cadastrada.")
+        return
+
+    print("\n FOTOS ANTIGAS \n")
+
+    for foto in dados["fotos"]:
+
+        data_atual = datetime.datetime.now()
+
+        data_foto = datetime.datetime.strptime(
+            foto["data"],
+            "%d-%m-%Y %H:%M"
+        )
+
+        diferenca = (data_atual - data_foto).days
+
+        if diferenca >= 365:
+            tempo = diferenca // 365
+            tempo = f"Mais de {tempo} ano(s)"
+
         elif diferenca >= 180:
-            lista_seis_meses['foto', 'descricao'] = i["foto"], i["descricao"]
-            print(lista_seis_meses)
-        elif diferenca >= 365:
-            lista_ano['foto', 'descricao'] = i["foto"], i["descricao"]
-            print(lista_ano)
+            tempo = "Mais de 6 meses"
+
+        elif diferenca >= 90:
+            tempo = "Mais de 3 meses"
+
         else:
             continue
 
-    return diferenca
+        print(
+            f"\nFoto: {foto['foto'].capitalize()}"
+            f"\nDescrição: {foto['descricao'].capitalize()}"
+            f"\nTempo armazenado: {tempo}"
+        )
 
 while True:
-    ## ...
+
+    limpar()
+
     menu()
-    match int(input("digite o seu numero:")):
-        case 1:
-            galeria()
-        case 2:
-            procurar_foto()
-        case 3:
-            adicionar_foto()
-        case 4:
-            excluir_foto()
-        case 5:
-            foto_temporaria()
-        case 6:
-            calcular_tempo_vida()
-        case _:
-            # adicionar um if else para tratar erros
-            print("Opção inválida, tente novamente.")
+
+    try:
+        opcao = int(input("\nDigite uma opção: "))
+
+        match opcao:
+
+            case 1:
+                galeria()
+
+            case 2:
+                procurar_foto()
+
+            case 3:
+                nome = input("Digite o nome da foto: ")
+                descricao = input("Digite a descrição da foto: ")
+
+                adicionar_foto(nome, descricao)
+
+            case 4:
+                excluir_foto()
+
+            case 5:
+                foto_temporaria()
+
+            case 6:
+                calcular_tempo_vida()
+
+            case 0:
+                print("Encerrando sistema...")
+                break
+
+            case _:
+                print("Opção inválida.")
+
+    except ValueError:
+        print("Digite apenas números.")
+
+    input("\nPressione ENTER para continuar...")

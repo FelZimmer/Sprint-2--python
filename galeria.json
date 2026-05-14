@@ -1,11 +1,28 @@
 {
     "fotos": [
         {
-            "foto": "montanha",
-            "descricao": "floresta",
-            "data": "2026-05-13 18:11:30.546829",
+            "foto": "Computador",
+            "descricao": "Computador com uma tela do navegador.",
+            "data": "14-05-2026 13:42",
             "is_temporaria": false,
-            "tempo_vida": null
+            "tempo_vida": null,
+            "categoria": "tecnologia"
+        },
+        {
+            "foto": "gato",
+            "descricao": "gato dormindo na cama",
+            "data": "14-05-2024 13:56",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "categoria": "animal"
+        },
+        {
+            "foto": "cachorro",
+            "descricao": "cachorro",
+            "data": "14-05-2026 16:16",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "categoria": "animal"
         }
     ]
 }
