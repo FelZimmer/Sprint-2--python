@@ -2,6 +2,39 @@ import threading
 import datetime
 import json
 
+animais_chave = [
+    "animal", "animais", "cachorro", "gato",
+    "passaro", "pássaro", "cobra", "coelho",
+    "hamster", "tigre", "leao", "leão",
+    "urso", "macaco"
+]
+
+natureza_chave = [
+    "floresta", "montanha", "rio", "mar",
+    "praia", "arvore", "árvore", "campo",
+    "flores", "natureza", "céu", "ceu",
+    "grama", "sol"
+]
+
+estudos_chave = [
+    "livro", "caderno", "caneta", "lapis",
+    "lápis", "lousa", "professor", "escola",
+    "faculdade", "estudo", "matematica",
+    "matemática", "mochila"
+]
+
+comida_chave = [
+    "pizza", "hamburguer", "hambúrguer",
+    "bolo", "comida", "macarrao", "macarrão",
+    "lanche", "sushi", "café", "cafe"
+]
+
+tecnologia_chave = [
+    "computador", "notebook", "mouse",
+    "teclado", "programacao", "programação",
+    "codigo", "código", "celular", "monitor"
+]
+
 
 def menu():
     print("\nBem vindo à galeria do seu celular!\n")
@@ -11,6 +44,7 @@ def menu():
     print("4 - Excluir foto\n")
     print("5 - foto temporaria\n")
 
+
 def menu_temporaria():
     print("\nEscolha uma opção de foto temporária: \n")
     print("1 - Em um dia\n")
@@ -18,7 +52,7 @@ def menu_temporaria():
     print("3 - Um mês\n")
     print("4 - Um ano\n")
     print("5 - 15 segundos\n")
-  
+
 
 def galeria():
     try:
@@ -26,12 +60,13 @@ def galeria():
             dados = json.load(f)
 
             for i in dados["fotos"]:
-                print(f" Foto: {i['foto']} - Descrição: {i['descricao']} - Data: {i['data']} - Temporária: {i['is_temporaria']} - Tempo de vida: {i['tempo_vida']}")
+                print(
+                    f" Foto: {i['foto']} - Descrição: {i['descricao']} - Categoria: {i['categoria']} - Data: {i['data']} - Temporária: {i['is_temporaria']} - Tempo de vida: {i['tempo_vida']}")
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
 
-def procurar_foto():
 
+def procurar_foto():
     try:
         with open('galeria.json', "r", encoding="utf-8") as f:
             dados = json.load(f)
@@ -48,7 +83,6 @@ def procurar_foto():
             descricao = str(foto.get("descricao", "")).lower()
 
             if busca == nome or busca == descricao:
-
                 print(
                     f"\nFoto: {foto.get('foto', 'N/A')} | "
                     f"Descrição: {foto.get('descricao', 'N/A')} | "
@@ -70,6 +104,27 @@ def procurar_foto():
         return
 
 
+def detectar_categoria(nome, descricao):
+    texto = f"{nome} {descricao}".lower()
+
+    categorias = {
+        "animal": animais_chave,
+        "natureza": natureza_chave,
+        "estudos": estudos_chave,
+        "comida": comida_chave,
+        "tecnologia": tecnologia_chave
+    }
+
+    for categoria, palavras in categorias.items():
+
+        for palavra in palavras:
+
+            if palavra in texto:
+                return categoria
+
+    return "outros"
+
+
 def adicionar_foto():
     try:
         while True:
@@ -78,26 +133,27 @@ def adicionar_foto():
 
             nome = str(input("Digite o nome da foto: ")).lower()
             existe = False
-            
+
             for i in fotos["fotos"]:
                 if nome == i['foto'].lower():
                     print("Foto já existe!")
                     existe = True
                     break
-            
+
             if existe:
-                    print("Erro: Já existe uma foto com esse nome!")
-                    break
-                    
+                print("Erro: Já existe uma foto com esse nome!")
+                break
+
             else:
                 descricao = str(input("Digite a descrição da foto: "))
-                
+
                 fotos["fotos"].append({
                     "foto": nome,
                     "descricao": descricao,
-                    "data": str(datetime.datetime.now()),
+                    "data": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
                     "is_temporaria": False,
-                    "tempo_vida": None
+                    "tempo_vida": None,
+                    "categoria": detectar_categoria(nome, descricao)
                 })
                 print("Foto tirada com sucesso!")
 
@@ -106,16 +162,17 @@ def adicionar_foto():
                 print("Foto tirada com sucesso!")
             break
         return
-        
+
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
+
 
 def excluir_foto():
     try:
 
         with open('galeria.json', "r", encoding="utf-8") as f:
             fotos = json.load(f)
-        
+
         nome = str(input("Digite o nome da foto que deseja excluir: ")).lower()
         for i in fotos["fotos"]:
             if nome == i['foto'].lower():
@@ -128,6 +185,7 @@ def excluir_foto():
             return
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
+
 
 def remover_foto(nome):
     with open("galeria.json", "r", encoding="utf-8") as f:
@@ -144,6 +202,7 @@ def remover_foto(nome):
         json.dump(dados, f, ensure_ascii=False, indent=4)
 
     print(f"Foto '{nome}' removida!")
+
 
 def foto_temporaria():
     try:
@@ -170,9 +229,11 @@ def foto_temporaria():
         dados["fotos"].append({
             "foto": nome,
             "descricao": descricao,
-            "data": str(datetime.datetime.now()),
+            "data": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
             "is_temporaria": True,
-            "tempo_vida": segundos
+            "tempo_vida": segundos,
+            "categoria": detectar_categoria(nome, descricao)
+
         })
 
         with open('galeria.json', "w", encoding="utf-8") as f:
@@ -186,12 +247,41 @@ def foto_temporaria():
         )
 
         temporizador.start()
-    
+
 
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
 
+lista_tres_meses = {}
+lista_seis_meses = {}
+lista_ano = {}
+
+def calcular_tempo_vida():
+    with open('galeria.json', "r", encoding="utf-8") as f:
+        dados = json.load(f)
+    for i in dados["fotos"]:
+        data_agr = datetime.datetime.now()
+        data_foto = datetime.datetime.strptime(i["data"], "%d-%m-%Y %H:%M")
+
+        delta = data_agr - data_foto
+        diferenca = delta.days
+        print(diferenca)
+        if diferenca >= 90:
+            lista_tres_meses['foto', 'descricao']= i["foto"], i["descricao"]
+            print(lista_tres_meses)
+        elif diferenca >= 180:
+            lista_seis_meses['foto', 'descricao'] = i["foto"], i["descricao"]
+            print(lista_seis_meses)
+        elif diferenca >= 365:
+            lista_ano['foto', 'descricao'] = i["foto"], i["descricao"]
+            print(lista_ano)
+        else:
+            continue
+
+    return diferenca
+
 while True:
+    ## ...
     menu()
     match int(input("digite o seu numero:")):
         case 1:
@@ -204,7 +294,8 @@ while True:
             excluir_foto()
         case 5:
             foto_temporaria()
+        case 6:
+            calcular_tempo_vida()
         case _:
-            #adicionar um if else para tratar erros
-            print("Opção inválida, tente novamente.")            #adicionar um if else para tratar erros
+            # adicionar um if else para tratar erros
             print("Opção inválida, tente novamente.")
