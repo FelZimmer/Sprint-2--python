@@ -133,13 +133,22 @@ def galeria():
         )
 
 def procurar_foto():
+
     dados = carregar_dados()
+
+    if not dados["fotos"]:
+        print("Galeria vazia.")
+        return
+
     menu_pesquisa()
+
     try:
+
         match int(input("Digite o número: ")):
             case 1:
-                
-                busca = input("Digite o nome ou descrição da foto: ").lower()
+                busca = input(
+                    "Digite o nome ou descrição da foto: "
+                ).lower()
 
                 encontrada = False
 
@@ -150,13 +159,19 @@ def procurar_foto():
 
                     if busca in nome or busca in descricao:
 
+                        tempo = (
+                            "---"
+                            if foto["tempo_vida"] is None
+                            else f"{foto['tempo_vida']} segundos"
+                        )
+
                         print(
-                        f"\nFoto: {foto['foto'].capitalize()}"
-                        f"\nDescrição: {foto['descricao'].capitalize()}"
-                        f"\nCategoria: {foto['categoria'].capitalize()}"
-                        f"\nData: {foto['data']}"
-                        f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                        f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+                            f"\nFoto: {foto['foto'].capitalize()}"
+                            f"\nDescrição: {foto['descricao'].capitalize()}"
+                            f"\nCategoria: {foto['categoria'].capitalize()}"
+                            f"\nData: {foto['data']}"
+                            f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                            f"\nTempo de vida: {tempo}"
                         )
 
                         encontrada = True
@@ -166,120 +181,93 @@ def procurar_foto():
 
             case 2:
                 menu_categoria()
+                try:
+                    categoria_escolhida = int(input("Digite o número correspondente à categoria desejada: "))
+                    encontrada = False
+                    for foto in dados["fotos"]:
+                        if categoria_escolhida == 1 and foto["categoria"] == "animal":
 
-                match int(input("Digite o número correspondente à categoria desejada: ")):
-                    case 1:
-                        if not dados["fotos"]:
-                            print("Galeria vazia.")
-                            return
+                            print(
+                                f"\nFoto: {foto['foto'].capitalize()}"
+                                f"\nDescrição: {foto['descricao'].capitalize()}"
+                                f"\nCategoria: {foto['categoria'].capitalize()}"
+                                f"\nData: {foto['data']}"
+                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
+                            )
 
-                        for foto in dados["fotos"]:
-                            if foto["categoria"] == "animal":
-                                print(
-                                    f"\nFoto: {foto['foto'].capitalize()}"
-                                    f"\nDescrição: {foto['descricao'].capitalize()}"
-                                    f"\nCategoria: {foto['categoria'].capitalize()}"
-                                    f"\nData: {foto['data']}"
-                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
-                                )
-                            else:
-                                    print("Nenhuma foto encontrada nessa categoria.")
-                                    return
-                    case 2:
-                        if not dados["fotos"]:
-                            print("Galeria vazia.")
-                            return
+                            encontrada = True
 
-                        for foto in dados["fotos"]:
-                            if foto["categoria"] == "natureza":
-                                print(
-                                    f"\nFoto: {foto['foto'].capitalize()}"
-                                    f"\nDescrição: {foto['descricao'].capitalize()}"
-                                    f"\nCategoria: {foto['categoria'].capitalize()}"
-                                    f"\nData: {foto['data']}"
-                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
-                                )
-                            else:
-                                    print("Nenhuma foto encontrada nessa categoria.")
-                                    return
-                    case 3:
-                        if not dados["fotos"]:
-                            print("Galeria vazia.")
-                            return
+                        elif categoria_escolhida == 2 and foto["categoria"] == "natureza":
 
-                        for foto in dados["fotos"]:
-                            if foto["categoria"] == "estudos":
-                                print(
-                                    f"\nFoto: {foto['foto'].capitalize()}"
-                                    f"\nDescrição: {foto['descricao'].capitalize()}"
-                                    f"\nCategoria: {foto['categoria'].capitalize()}"
-                                    f"\nData: {foto['data']}"
-                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
-                                )
-                            else:
-                                    print("Nenhuma foto encontrada nessa categoria.")
-                                    return
-                    case 4:
-                        if not dados["fotos"]:
-                            print("Galeria vazia.")
-                            return
+                            print(
+                                f"\nFoto: {foto['foto'].capitalize()}"
+                                f"\nDescrição: {foto['descricao'].capitalize()}"
+                                f"\nCategoria: {foto['categoria'].capitalize()}"
+                                f"\nData: {foto['data']}"
+                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
+                            )
 
-                        for foto in dados["fotos"]:
-                            if foto["categoria"] == "comida":
-                                print(
-                                    f"\nFoto: {foto['foto'].capitalize()}"
-                                    f"\nDescrição: {foto['descricao'].capitalize()}"
-                                    f"\nCategoria: {foto['categoria'].capitalize()}"
-                                    f"\nData: {foto['data']}"
-                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
-                                )
-                            else:
-                                print("Nenhuma foto encontrada nessa categoria.")
-                                return
-                    case 5:
-                        if not dados["fotos"]:
-                            print("Galeria vazia.")
-                            return
+                            encontrada = True
 
-                        for foto in dados["fotos"]:
-                            if foto["categoria"] == "tecnologia":
-                                print(
-                                    f"\nFoto: {foto['foto'].capitalize()}"
-                                    f"\nDescrição: {foto['descricao'].capitalize()}"
-                                    f"\nCategoria: {foto['categoria'].capitalize()}"
-                                    f"\nData: {foto['data']}"
-                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
-                                )
-                            else:
-                                    print("Nenhuma foto encontrada nessa categoria.")
-                                    return
-                    case 6:
-                        if not dados["fotos"]:
-                            print("Galeria vazia.")
-                            return
+                        elif categoria_escolhida == 3 and foto["categoria"] == "estudos":
 
-                        for foto in dados["fotos"]:
-                            if foto["categoria"] == "outros":
-                                print(
-                                    f"\nFoto: {foto['foto'].capitalize()}"
-                                    f"\nDescrição: {foto['descricao'].capitalize()}"
-                                    f"\nCategoria: {foto['categoria'].capitalize()}"
-                                    f"\nData: {foto['data']}"
-                                    f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                    f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
-                                )
-                            else:
-                                    print("Nenhuma foto encontrada nessa categoria.")
-                                    return
+                            print(
+                                f"\nFoto: {foto['foto'].capitalize()}"
+                                f"\nDescrição: {foto['descricao'].capitalize()}"
+                                f"\nCategoria: {foto['categoria'].capitalize()}"
+                                f"\nData: {foto['data']}"
+                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
+                            )
+
+                            encontrada = True
+
+                        elif categoria_escolhida == 4 and foto["categoria"] == "comida":
+
+                            print(
+                                f"\nFoto: {foto['foto'].capitalize()}"
+                                f"\nDescrição: {foto['descricao'].capitalize()}"
+                                f"\nCategoria: {foto['categoria'].capitalize()}"
+                                f"\nData: {foto['data']}"
+                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
+                            )
+
+                            encontrada = True
+
+                        elif categoria_escolhida == 5 and foto["categoria"] == "tecnologia":
+
+                            print(
+                                f"\nFoto: {foto['foto'].capitalize()}"
+                                f"\nDescrição: {foto['descricao'].capitalize()}"
+                                f"\nCategoria: {foto['categoria'].capitalize()}"
+                                f"\nData: {foto['data']}"
+                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
+                            )
+
+                            encontrada = True
+
+                        elif categoria_escolhida == 6 and foto["categoria"] == "outros":
+
+                            print(
+                                f"\nFoto: {foto['foto'].capitalize()}"
+                                f"\nDescrição: {foto['descricao'].capitalize()}"
+                                f"\nCategoria: {foto['categoria'].capitalize()}"
+                                f"\nData: {foto['data']}"
+                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
+                            )
+
+                            encontrada = True
+                    if not encontrada:
+                        print("Nenhuma foto encontrada nessa categoria.")
+                except ValueError:
+                    print("Digite apenas números.")
             case _:
                 print("Opção inválida.")
-                return
-
     except ValueError:
         print("Digite apenas números.")
     
@@ -399,44 +387,90 @@ def foto_temporaria():
         print("Digite apenas números.")
 
 def calcular_tempo_vida():
-
     dados = carregar_dados()
-
     if not dados["fotos"]:
         print("Nenhuma foto cadastrada.")
         return
-
-    print("\n FOTOS ANTIGAS \n")
-
+    print("\nFOTOS ANTIGAS\n")
+    encontrou_foto_antiga = False
     for foto in dados["fotos"]:
-
         data_atual = datetime.datetime.now()
+        try:
+            data_foto = datetime.datetime.strptime(
+                foto["data"],
+                "%d-%m-%Y %H:%M"
+            )
 
-        data_foto = datetime.datetime.strptime(
-            foto["data"],
-            "%d-%m-%Y %H:%M"
-        )
-
+        except ValueError:
+            print(f"Erro ao converter data da foto '{foto['foto']}'.")
+            continue
         diferenca = (data_atual - data_foto).days
-
         if diferenca >= 365:
-            tempo = diferenca // 365
-            tempo = f"Mais de {tempo} ano(s)"
-
+            anos = diferenca // 365
+            tempo = f"Mais de {anos} ano(s)"
         elif diferenca >= 180:
             tempo = "Mais de 6 meses"
-
         elif diferenca >= 90:
             tempo = "Mais de 3 meses"
-
         else:
             continue
+
+        encontrou_foto_antiga = True
 
         print(
             f"\nFoto: {foto['foto'].capitalize()}"
             f"\nDescrição: {foto['descricao'].capitalize()}"
+            f"\nCategoria: {foto['categoria'].capitalize()}"
+            f"\nData: {foto['data']}"
             f"\nTempo armazenado: {tempo}"
         )
+
+    if not encontrou_foto_antiga:
+        print("Nenhuma foto antiga encontrada.")
+        return
+
+    print(
+        "\nDeseja apagar as fotos com mais de 1 ano de armazenamento?\n1 - Sim\n2 - Não"
+    )
+
+    try:
+
+        match int(input("Digite o número: ")):
+            case 1:
+                fotos_para_remover = []
+                for foto in dados["fotos"]:
+                    data_atual = datetime.datetime.now()
+                    try:
+                        data_foto = datetime.datetime.strptime( foto["data"], "%d-%m-%Y %H:%M" )
+
+                    except ValueError:
+                        continue
+
+                    diferenca = (data_atual - data_foto).days
+
+                    if diferenca >= 365:
+                        fotos_para_remover.append(foto["foto"])
+
+                if not fotos_para_remover:
+                    print("Nenhuma foto com mais de 1 ano encontrada.")
+                    return
+
+                for nome in fotos_para_remover:
+                    remover_foto(nome)
+
+                print("Fotos antigas removidas com sucesso!")
+
+            case 2:
+
+                print("Fotos antigas mantidas.")
+
+            case _:
+
+                print("Opção inválida.")
+
+    except ValueError:
+        print("Digite apenas números.")
+
 
 while True:
 
