@@ -65,10 +65,7 @@ tecnologia_chave = [
 ]
 
 def limpar():
-    try:
-        os.system("cls")
-    except:
-        os.system("clear")
+    os.system("cls" if os.name == "nt" else "clear")    
 
 def carregar_dados():
     try:
@@ -186,9 +183,9 @@ def procurar_foto():
                                     f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
                                     f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
                                 )
-                        else:
-                                print("Nenhuma foto encontrada nessa categoria.")
-                                return
+                            else:
+                                    print("Nenhuma foto encontrada nessa categoria.")
+                                    return
                     case 2:
                         if not dados["fotos"]:
                             print("Galeria vazia.")
@@ -204,9 +201,9 @@ def procurar_foto():
                                     f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
                                     f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
                                 )
-                        else:
-                                print("Nenhuma foto encontrada nessa categoria.")
-                                return
+                            else:
+                                    print("Nenhuma foto encontrada nessa categoria.")
+                                    return
                     case 3:
                         if not dados["fotos"]:
                             print("Galeria vazia.")
@@ -222,9 +219,9 @@ def procurar_foto():
                                     f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
                                     f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
                                 )
-                        else:
-                                print("Nenhuma foto encontrada nessa categoria.")
-                                return
+                            else:
+                                    print("Nenhuma foto encontrada nessa categoria.")
+                                    return
                     case 4:
                         if not dados["fotos"]:
                             print("Galeria vazia.")
@@ -258,9 +255,9 @@ def procurar_foto():
                                     f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
                                     f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
                                 )
-                        else:
-                                print("Nenhuma foto encontrada nessa categoria.")
-                                return
+                            else:
+                                    print("Nenhuma foto encontrada nessa categoria.")
+                                    return
                     case 6:
                         if not dados["fotos"]:
                             print("Galeria vazia.")
@@ -276,9 +273,9 @@ def procurar_foto():
                                     f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
                                     f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
                                 )
-                        else:
-                                print("Nenhuma foto encontrada nessa categoria.")
-                                return
+                            else:
+                                    print("Nenhuma foto encontrada nessa categoria.")
+                                    return
             case _:
                 print("Opção inválida.")
                 return
