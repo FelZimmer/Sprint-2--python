@@ -1,28 +1,68 @@
 {
     "fotos": [
         {
-            "foto": "Computador",
-            "descricao": "Computador com uma tela do navegador.",
-            "data": "14-05-2024 13:42",
+            "foto": "golden_retriever.jpg",
+            "descricao": "Cachorro correndo no parque",
+            "data": "14-10-2023 16:16",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "categoria": "animais"
+        },
+        {
+            "foto": "por_do_sol.png",
+            "descricao": "Vista das montanhas ao entardecer",
+            "data": "15-10-2023 18:30",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "categoria": "natureza"
+        },
+        {
+            "foto": "hamburguer_artesanal.jpg",
+            "descricao": "Jantar de sexta-feira",
+            "data": "16-10-2023 21:20",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "categoria": "comida"
+        },
+        {
+            "foto": "setup_gamer.jpg",
+            "descricao": "Novo monitor ultrawide instalado",
+            "data": "17-10-2023 11:00",
             "is_temporaria": false,
             "tempo_vida": null,
             "categoria": "tecnologia"
         },
         {
-            "foto": "gato",
-            "descricao": "gato dormindo na cama",
-            "data": "14-05-2025 13:56",
-            "is_temporaria": false,
-            "tempo_vida": null,
-            "categoria": "animal"
+            "foto": "recibo_estacionamento.jpg",
+            "descricao": "Comprovante de pagamento shopping",
+            "data": "17-10-2023 14:15",
+            "is_temporaria": true,
+            "tempo_vida": 60,
+            "categoria": "outros"
         },
         {
-            "foto": "cachorro",
-            "descricao": "cachorro",
-            "data": "14-10-2025 16:16",
+            "foto": "gato_dormindo.png",
+            "descricao": "Fofura tirando um cochilo",
+            "data": "18-10-2023 08:00",
             "is_temporaria": false,
             "tempo_vida": null,
-            "categoria": "animal"
+            "categoria": "animais"
+        },
+        {
+            "foto": "codigo_python.png",
+            "descricao": "Print do erro no deploy",
+            "data": "18-10-2023 10:30",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "categoria": "tecnologia"
+        },
+        {
+            "foto": "salada_frutas.jpg",
+            "descricao": "Café da manhã saudável",
+            "data": "19-10-2023 07:45",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "categoria": "comida"
         }
     ]
 }
