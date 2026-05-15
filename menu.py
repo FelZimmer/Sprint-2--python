@@ -91,6 +91,7 @@ def menu():
     print("4 - Excluir foto")
     print("5 - Foto temporária")
     print("6 - Ver fotos antigas")
+    print("7 - Ver Lixeira")
     print("0 - Sair")
 
 def menu_pesquisa():
@@ -131,6 +132,40 @@ def galeria():
             f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
             f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
         )
+
+def lixeira():
+    dados = carregar_dados()
+
+    if not dados["lixeira"]:
+        print("Lixeira vazia.")
+        return
+
+    for foto in dados["lixeira"]:
+        print(
+            f"\nFoto: {foto['foto'].capitalize()}"
+            f"\nDescrição: {foto['descricao'].capitalize()}"
+            f"\nCategoria: {foto['categoria'].capitalize()}"
+            f"\nData: {foto['data']}"
+            f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
+            f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+        )
+    match int(input("\nOpções: \n1 - Esvaziar lixeira \n2 - Recuperar item da lixeira\n3 - Voltar para o menu\nDigite o número: ").lower()):
+        case 1:
+            dados["lixeira"].clear()
+            salvar_dados(dados)
+            print("Lixeira esvaziada.")
+        case 2:
+            nome = input("Digite o nome da foto que deseja recuperar: ").lower()
+            for foto in dados["lixeira"]:
+                if foto["foto"].lower() == nome:
+                    dados["fotos"].append(foto)
+                    dados["lixeira"].remove(foto)
+                    salvar_dados(dados)
+                    print(f"Foto '{nome}' recuperada com sucesso!")
+                    return
+        case 3:
+            return
+        
 
 def procurar_foto():
 
@@ -327,6 +362,7 @@ def excluir_foto(nome, mensagem=None):
         if foto["foto"] == nome:
 
             dados["fotos"].remove(foto)
+            dados["lixeira"].append(foto)
 
             salvar_dados(dados)
             if mensagem is not None:
@@ -426,40 +462,25 @@ def calcular_tempo_vida():
     if not encontrou_foto_antiga:
         print("Nenhuma foto antiga encontrada.")
         return
-
-    print(
-        "\nDeseja apagar as fotos com mais de 1 ano de armazenamento?"
-        "\n1 - Sim"
-        "\n2 - Não"
-    )
+    print("\nDeseja apagar as fotos com mais de 1 ano de armazenamento?\n1 - Sim\n2 - Não")
 
     try:
-
         match int(input("Digite o número: ")):
 
             case 1:
-
                 fotos_para_remover = []
-
                 for foto in dados["fotos"]:
-
                     data_atual = datetime.datetime.now()
-
                     try:
-
                         data_foto = datetime.datetime.strptime(
                             foto["data"],
                             "%d-%m-%Y %H:%M"
                         )
-
                     except ValueError:
                         continue
-
                     diferenca = (data_atual - data_foto).days
-
                     if diferenca >= 365:
                         fotos_para_remover.append(foto)
-
                 if not fotos_para_remover:
                     print("Nenhuma foto com mais de 1 ano encontrada.")
                     return
@@ -467,16 +488,12 @@ def calcular_tempo_vida():
                 menu_categoria()
 
                 try:
-
                     categoria_escolhida = int(
                         input(
                             "Digite o número da categoria que deseja excluir: "
                         )
                     )
-
                     encontrou_categoria = False
-
-                    
                     cat = ''
                     for foto in fotos_para_remover:
 
@@ -537,20 +554,14 @@ def calcular_tempo_vida():
                         
                 except ValueError:
 
-                    print("Digite apenas números.")
-                
+                    print("Digite apenas números.")             
             case 2:
-
                 print("Fotos antigas mantidas.")
-
             case _:
-
                 print("Opção inválida.")
-
     except ValueError:
 
         print("Digite apenas números.")
-
 
 while True:
 
@@ -585,6 +596,8 @@ while True:
 
             case 6:
                 calcular_tempo_vida()
+            case 7:
+                lixeira()
 
             case 0:
                 print("Encerrando sistema...")

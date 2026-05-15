@@ -64,5 +64,15 @@
             "tempo_vida": null,
             "categoria": "comida"
         }
+    ],
+    "lixeira": [
+            {
+                "foto": "recibo_estacionamento.jpg",
+                "descricao": "Comprovante de pagamento shopping",
+                "data": "17-10-2023 14:15",
+                "is_temporaria": false,
+                "tempo_vida": null,
+                "categoria": "outros"
+            }
     ]
 }

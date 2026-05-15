@@ -1,20 +1,24 @@
 # 📸 Galeria de Fotos em Python
 
 Sistema de gerenciamento de galeria de fotos desenvolvido em Python utilizando JSON para armazenamento de dados.
-O projeto permite adicionar, visualizar, pesquisar e excluir fotos, além de oferecer suporte para fotos temporárias com remoção automática.
+O projeto permite adicionar, visualizar, pesquisar, recuperar e excluir fotos, além de oferecer suporte para fotos temporárias com remoção automática e sistema de lixeira.
 
 ---
 
 ## 🚀 Funcionalidades
 
 * 📂 Visualizar galeria de fotos
-* 🔎 Procurar fotos por nome ou descrição
+* 🔎 Procurar fotos por nome, descrição ou categoria
 * ➕ Adicionar novas fotos
 * ❌ Excluir fotos
+* 🗑️ Sistema de lixeira
+* ♻️ Recuperar fotos excluídas
+* 🧹 Esvaziar lixeira
 * ⏳ Criar fotos temporárias
 * 🧠 Detecção automática de categoria
-* 📅 Cálculo do tempo de vida das fotos
+* 📅 Identificação de fotos antigas
 * 🗃️ Armazenamento em arquivo JSON
+* 🖥️ Limpeza automática do terminal
 
 ---
 
@@ -24,6 +28,7 @@ O projeto permite adicionar, visualizar, pesquisar e excluir fotos, além de ofe
 * JSON
 * Threading
 * Datetime
+* OS
 
 ---
 
@@ -44,11 +49,12 @@ O arquivo `galeria.json` deve possuir a seguinte estrutura:
 
 ```json
 {
-    "fotos": []
+    "fotos": [],
+    "lixeira": []
 }
 ```
 
-Exemplo:
+### Exemplo:
 
 ```json
 {
@@ -61,7 +67,8 @@ Exemplo:
             "tempo_vida": null,
             "categoria": "natureza"
         }
-    ]
+    ],
+    "lixeira": []
 }
 ```
 
@@ -75,13 +82,13 @@ Exemplo:
 git clone https://github.com/FelZimmer/Sprint-2--python.git
 ```
 
-### 2️⃣ Acesse a pasta
+### 2️⃣ Acesse a pasta do projeto
 
 ```bash
 cd Sprint-2--python
 ```
 
-### 3️⃣ Execute o projeto
+### 3️⃣ Execute o sistema
 
 ```bash
 python main.py
@@ -97,16 +104,24 @@ python main.py
 3 - Adicionar foto
 4 - Excluir foto
 5 - Foto temporária
-6 - Calcular tempo de vida
+6 - Ver fotos antigas
+7 - Ver lixeira
+0 - Sair
 ```
 
 ---
 
-## 🧠 Categorias Automáticas
+## 🔎 Sistema de Pesquisa
 
-O sistema detecta automaticamente categorias com base no nome e descrição da foto.
+O sistema permite pesquisar fotos de duas formas:
 
-### Categorias disponíveis:
+### 📌 Por nome ou descrição
+
+Busca fotos utilizando palavras presentes no nome ou descrição.
+
+### 📂 Por categoria
+
+Categorias disponíveis:
 
 * 🐶 Animal
 * 🌳 Natureza
@@ -117,9 +132,24 @@ O sistema detecta automaticamente categorias com base no nome e descrição da f
 
 ---
 
+## 🧠 Categorias Automáticas
+
+O sistema detecta automaticamente a categoria da foto com base no nome e descrição informados pelo usuário.
+
+Exemplo:
+
+```python
+Nome: notebook gamer
+Descrição: computador para estudos
+
+Categoria detectada: tecnologia
+```
+
+---
+
 ## ⏳ Fotos Temporárias
 
-As fotos temporárias são removidas automaticamente após um determinado tempo.
+As fotos temporárias são removidas automaticamente após um determinado tempo utilizando `threading.Timer()`.
 
 ### Opções disponíveis:
 
@@ -131,16 +161,62 @@ As fotos temporárias são removidas automaticamente após um determinado tempo.
 | 4     | 1 ano       |
 | 5     | 15 segundos |
 
----
-
-## 📅 Cálculo de Tempo de Vida
-
-O sistema calcula há quantos dias a foto foi adicionada e organiza em listas:
-
-* Fotos com mais de 3 meses
-* Fotos com mais de 6 meses
-* Fotos com mais de 1 ano
+Quando removidas, as fotos vão automaticamente para a lixeira.
 
 ---
 
-## Projeto em desenvolvimento ⚙️
+## 🗑️ Sistema de Lixeira
+
+As fotos excluídas não são apagadas permanentemente imediatamente.
+
+### Funcionalidades:
+
+* ♻️ Recuperar fotos excluídas
+* 🧹 Esvaziar lixeira
+* 📂 Visualizar itens removidos
+
+---
+
+## 📅 Sistema de Fotos Antigas
+
+O sistema identifica fotos armazenadas há muito tempo.
+
+### Classificações:
+
+* 📆 Mais de 3 meses
+* 📆 Mais de 6 meses
+* 📆 Mais de 1 ano
+
+Também é possível excluir automaticamente fotos antigas por categoria.
+
+---
+
+## 🖥️ Limpeza do Terminal
+
+O sistema utiliza a biblioteca `os` para limpar automaticamente o terminal durante a navegação:
+
+```python
+os.system("cls" if os.name == "nt" else "clear")
+```
+
+Compatível com:
+
+* Windows (`cls`)
+* Linux/macOS (`clear`)
+
+---
+
+## ⚠️ Tratamento de Erros
+
+O projeto possui tratamento de erros para:
+
+* Entrada inválida do usuário
+* Conversão de datas
+* Leitura e escrita do JSON
+* Valores não numéricos no menu
+* Galeria vazia
+* Fotos não encontradas
+
+---
+
+# Projeto em desenvolvimento ⚙️
