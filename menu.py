@@ -318,7 +318,7 @@ def adicionar_foto(nome, descricao, is_temporaria=False, tempo_vida=None):
     print("Foto adicionada com sucesso!")
 
 
-def excluir_foto(nome, mensagem):
+def excluir_foto(nome, mensagem=None):
 
     dados = carregar_dados()
 
@@ -329,8 +329,8 @@ def excluir_foto(nome, mensagem):
             dados["fotos"].remove(foto)
 
             salvar_dados(dados)
-
-            print(mensagem)
+            if mensagem is not None:
+                print(mensagem)
             return
 
 def foto_temporaria():
@@ -476,81 +476,69 @@ def calcular_tempo_vida():
 
                     encontrou_categoria = False
 
+                    
+                    cat = ''
                     for foto in fotos_para_remover:
 
-                        if categoria_escolhida == 1 and foto["categoria"] == "animal":
+                        if categoria_escolhida == 1 and foto["categoria"] == "animais":
+                            cat = "animais"
 
-                            mensagem = (
-                                f"\nFoto '{foto['foto']}' "
-                                f"excluída automaticamente!"
-                            )
-
-                            excluir_foto(foto["foto"], mensagem)
+                            excluir_foto(foto["foto"])
 
                             encontrou_categoria = True
 
                         elif categoria_escolhida == 2 and foto["categoria"] == "natureza":
+                            cat = "natureza"
 
-                            mensagem = (
-                                f"\nFoto '{foto['foto']}' "
-                                f"excluída automaticamente!"
-                            )
+                            
 
-                            excluir_foto(foto["foto"], mensagem)
+                            excluir_foto(foto["foto"])
 
                             encontrou_categoria = True
 
                         elif categoria_escolhida == 3 and foto["categoria"] == "estudos":
+                            cat = "estudos"
 
-                            mensagem = (
-                                f"\nFoto '{foto['foto']}' "
-                                f"excluída automaticamente!"
-                            )
+                            
 
-                            excluir_foto(foto["foto"], mensagem)
+                            excluir_foto(foto["foto"])
 
                             encontrou_categoria = True
 
                         elif categoria_escolhida == 4 and foto["categoria"] == "comida":
+                            cat = "comida"
 
-                            mensagem = (
-                                f"\nFoto '{foto['foto']}' "
-                                f"excluída automaticamente!"
-                            )
+                            
 
-                            excluir_foto(foto["foto"], mensagem)
+                            excluir_foto(foto["foto"])
 
                             encontrou_categoria = True
 
                         elif categoria_escolhida == 5 and foto["categoria"] == "tecnologia":
+                            cat = "tecnologia"
 
-                            mensagem = (
-                                f"\nFoto '{foto['foto']}' "
-                                f"excluída automaticamente!"
-                            )
+                            
 
-                            excluir_foto(foto["foto"], mensagem)
+                            excluir_foto(foto["foto"])
 
                             encontrou_categoria = True
 
                         elif categoria_escolhida == 6 and foto["categoria"] == "outros":
+                            cat = "outros"
 
-                            mensagem = (
-                                f"\nFoto '{foto['foto']}' "
-                                f"excluída automaticamente!"
-                            )
-
-                            excluir_foto(foto["foto"], mensagem)
+                            excluir_foto(foto["foto"])
 
                             encontrou_categoria = True
 
                     if not encontrou_categoria:
                         print("Nenhuma foto encontrada nessa categoria.")
-
+                    elif encontrou_categoria:
+                        print(f"\nCategoria {cat} excluida")
+                        
                 except ValueError:
 
                     print("Digite apenas números.")
-
+                
             case 2:
 
                 print("Fotos antigas mantidas.")
@@ -608,4 +596,4 @@ while True:
     except ValueError:
         print("Digite apenas números.")
 
-    input("\nPressione ENTER para continuar...")
+    input("\nPressione ENTER para continuar.")
