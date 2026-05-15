@@ -317,26 +317,8 @@ def adicionar_foto(nome, descricao, is_temporaria=False, tempo_vida=None):
 
     print("Foto adicionada com sucesso!")
 
-def excluir_foto():
 
-    dados = carregar_dados()
-
-    nome = input("Digite o nome da foto que deseja excluir: ").lower()
-
-    for foto in dados["fotos"]:
-
-        if nome == foto["foto"].lower():
-
-            dados["fotos"].remove(foto)
-
-            salvar_dados(dados)
-
-            print("Foto excluída com sucesso!")
-            return
-
-    print("Foto não encontrada.")
-
-def remover_foto(nome):
+def excluir_foto(nome, mensagem):
 
     dados = carregar_dados()
 
@@ -348,14 +330,14 @@ def remover_foto(nome):
 
             salvar_dados(dados)
 
-            print(f"\nFoto '{nome}' removida automaticamente!")
+            print(mensagem)
             return
 
 def foto_temporaria():
 
     nome = input("Digite o nome da foto temporária: ")
     descricao = input("Digite a descrição da foto temporária: ")
-
+    mensagem = f"\nFoto '{nome}' excluída com sucesso!"
     menu_temporaria()
 
     try:
@@ -375,10 +357,9 @@ def foto_temporaria():
                 return
 
         adicionar_foto(nome, descricao, True, segundos)
-
         temporizador = threading.Timer(
             segundos,
-            lambda: remover_foto(nome)
+            lambda: excluir_foto(nome, mensagem)
         )
 
         temporizador.start()
@@ -387,31 +368,48 @@ def foto_temporaria():
         print("Digite apenas números.")
 
 def calcular_tempo_vida():
+
     dados = carregar_dados()
+
     if not dados["fotos"]:
         print("Nenhuma foto cadastrada.")
         return
+
     print("\nFOTOS ANTIGAS\n")
+
     encontrou_foto_antiga = False
+
     for foto in dados["fotos"]:
+
         data_atual = datetime.datetime.now()
+
         try:
+
             data_foto = datetime.datetime.strptime(
                 foto["data"],
                 "%d-%m-%Y %H:%M"
             )
 
         except ValueError:
+
             print(f"Erro ao converter data da foto '{foto['foto']}'.")
             continue
+
         diferenca = (data_atual - data_foto).days
+
         if diferenca >= 365:
+
             anos = diferenca // 365
             tempo = f"Mais de {anos} ano(s)"
+
         elif diferenca >= 180:
+
             tempo = "Mais de 6 meses"
+
         elif diferenca >= 90:
+
             tempo = "Mais de 3 meses"
+
         else:
             continue
 
@@ -430,18 +428,29 @@ def calcular_tempo_vida():
         return
 
     print(
-        "\nDeseja apagar as fotos com mais de 1 ano de armazenamento?\n1 - Sim\n2 - Não"
+        "\nDeseja apagar as fotos com mais de 1 ano de armazenamento?"
+        "\n1 - Sim"
+        "\n2 - Não"
     )
 
     try:
 
         match int(input("Digite o número: ")):
+
             case 1:
+
                 fotos_para_remover = []
+
                 for foto in dados["fotos"]:
+
                     data_atual = datetime.datetime.now()
+
                     try:
-                        data_foto = datetime.datetime.strptime( foto["data"], "%d-%m-%Y %H:%M" )
+
+                        data_foto = datetime.datetime.strptime(
+                            foto["data"],
+                            "%d-%m-%Y %H:%M"
+                        )
 
                     except ValueError:
                         continue
@@ -449,16 +458,98 @@ def calcular_tempo_vida():
                     diferenca = (data_atual - data_foto).days
 
                     if diferenca >= 365:
-                        fotos_para_remover.append(foto["foto"])
+                        fotos_para_remover.append(foto)
 
                 if not fotos_para_remover:
                     print("Nenhuma foto com mais de 1 ano encontrada.")
                     return
 
-                for nome in fotos_para_remover:
-                    remover_foto(nome)
+                menu_categoria()
 
-                print("Fotos antigas removidas com sucesso!")
+                try:
+
+                    categoria_escolhida = int(
+                        input(
+                            "Digite o número da categoria que deseja excluir: "
+                        )
+                    )
+
+                    encontrou_categoria = False
+
+                    for foto in fotos_para_remover:
+
+                        if categoria_escolhida == 1 and foto["categoria"] == "animal":
+
+                            mensagem = (
+                                f"\nFoto '{foto['foto']}' "
+                                f"excluída automaticamente!"
+                            )
+
+                            excluir_foto(foto["foto"], mensagem)
+
+                            encontrou_categoria = True
+
+                        elif categoria_escolhida == 2 and foto["categoria"] == "natureza":
+
+                            mensagem = (
+                                f"\nFoto '{foto['foto']}' "
+                                f"excluída automaticamente!"
+                            )
+
+                            excluir_foto(foto["foto"], mensagem)
+
+                            encontrou_categoria = True
+
+                        elif categoria_escolhida == 3 and foto["categoria"] == "estudos":
+
+                            mensagem = (
+                                f"\nFoto '{foto['foto']}' "
+                                f"excluída automaticamente!"
+                            )
+
+                            excluir_foto(foto["foto"], mensagem)
+
+                            encontrou_categoria = True
+
+                        elif categoria_escolhida == 4 and foto["categoria"] == "comida":
+
+                            mensagem = (
+                                f"\nFoto '{foto['foto']}' "
+                                f"excluída automaticamente!"
+                            )
+
+                            excluir_foto(foto["foto"], mensagem)
+
+                            encontrou_categoria = True
+
+                        elif categoria_escolhida == 5 and foto["categoria"] == "tecnologia":
+
+                            mensagem = (
+                                f"\nFoto '{foto['foto']}' "
+                                f"excluída automaticamente!"
+                            )
+
+                            excluir_foto(foto["foto"], mensagem)
+
+                            encontrou_categoria = True
+
+                        elif categoria_escolhida == 6 and foto["categoria"] == "outros":
+
+                            mensagem = (
+                                f"\nFoto '{foto['foto']}' "
+                                f"excluída automaticamente!"
+                            )
+
+                            excluir_foto(foto["foto"], mensagem)
+
+                            encontrou_categoria = True
+
+                    if not encontrou_categoria:
+                        print("Nenhuma foto encontrada nessa categoria.")
+
+                except ValueError:
+
+                    print("Digite apenas números.")
 
             case 2:
 
@@ -469,6 +560,7 @@ def calcular_tempo_vida():
                 print("Opção inválida.")
 
     except ValueError:
+
         print("Digite apenas números.")
 
 
@@ -496,7 +588,9 @@ while True:
                 adicionar_foto(nome, descricao)
 
             case 4:
-                excluir_foto()
+                nome = input("Digite o nome da foto que deseja excluir: ").lower()
+                mensagem = f"\nFoto '{nome}' excluída com sucesso!"
+                excluir_foto(nome, mensagem)
 
             case 5:
                 foto_temporaria()
