@@ -1,74 +1,58 @@
 # 📸 Galeria de Fotos em Python
 
-Sistema de gerenciamento de galeria de fotos desenvolvido em Python utilizando JSON para armazenamento de dados.
-O projeto permite adicionar, visualizar, pesquisar, recuperar e excluir fotos, além de oferecer suporte para fotos temporárias com remoção automática e sistema de lixeira.
+Sistema robusto de gerenciamento de galeria de fotos desenvolvido em Python, utilizando **JSON** para persistência de dados. O projeto oferece funcionalidades avançadas como detecção automática de categorias, sistema de lixeira e suporte a fotos temporárias com persistência.
 
 ---
 
 ## 🚀 Funcionalidades
 
-* 📂 Visualizar galeria de fotos
-* 🔎 Procurar fotos por nome, descrição ou categoria
-* ➕ Adicionar novas fotos
-* ❌ Excluir fotos
-* 🗑️ Sistema de lixeira
-* ♻️ Recuperar fotos excluídas
-* 🧹 Esvaziar lixeira
-* ⏳ Criar fotos temporárias
-* 🧠 Detecção automática de categoria
-* 📅 Identificação de fotos antigas
-* 🗃️ Armazenamento em arquivo JSON
-* 🖥️ Limpeza automática do terminal
+*   📂 **Visualizar Galeria**: Listagem completa das fotos com detalhes de descrição, categoria e data.
+*   🔎 **Busca Inteligente**: Pesquisa por nome, descrição ou filtro por categorias específicas.
+*   ➕ **Adicionar Fotos**: Cadastro de novas fotos com detecção automática de categoria.
+*   ❌ **Exclusão Segura**: As fotos deletadas são movidas para a lixeira antes de serem removidas permanentemente.
+*   🗑️ **Sistema de Lixeira**: Visualize, recupere ou esvazie todos os itens removidos.
+*   ⏳ **Fotos Temporárias**: Defina um tempo de vida para a foto. Ela será movida para a lixeira automaticamente.
+*   🧠 **Inteligência de Categoria**: O sistema analisa o nome e a descrição para sugerir a categoria correta (Animais, Natureza, Estudos, Comida, Tecnologia ou Outros).
+*   📅 **Gestão de Fotos Antigas**: Identifica fotos armazenadas há mais de 3 meses, 6 meses ou 1 ano, permitindo a exclusão em lote por categoria.
+*   🔄 **Persistência de Expiração**: Mesmo que o programa seja fechado, fotos temporárias vencidas serão detectadas e movidas para a lixeira na próxima inicialização.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-* Python 3
-* JSON
-* Threading
-* Datetime
-* OS
+*   **Python 3**: Linguagem base do sistema.
+*   **JSON**: Armazenamento e persistência dos dados.
+*   **Threading**: Utilizado para temporizadores em tempo real.
+*   **Datetime**: Manipulação e cálculo de datas de criação e expiração.
+*   **OS**: Integração com o sistema operacional para limpeza de terminal.
 
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```bash
-📦 galeria-python
- ┣ 📜 main.py
- ┣ 📜 galeria.json
- ┗ 📜 README.md
+📦 Sprint-2--python
+ ┣ 📜 menu.py          # Arquivo principal do sistema
+ ┣ 📜 galeria.json     # Banco de dados em formato JSON
+ ┗ 📜 README.md        # Documentação do projeto
 ```
 
 ---
 
 ## 📄 Estrutura do JSON
 
-O arquivo `galeria.json` deve possuir a seguinte estrutura:
+O arquivo `galeria.json` organiza as fotos em dois grupos principais: `fotos` (galeria ativa) e `lixeira`.
 
+### Exemplo de Registro:
 ```json
 {
-    "fotos": [],
-    "lixeira": []
-}
-```
-
-### Exemplo:
-
-```json
-{
-    "fotos": [
-        {
-            "foto": "praia",
-            "descricao": "Foto da praia ao pôr do sol",
-            "data": "13-05-2026 21:30",
-            "is_temporaria": false,
-            "tempo_vida": null,
-            "categoria": "natureza"
-        }
-    ],
-    "lixeira": []
+    "foto": "notebook_estudos.jpg",
+    "descricao": "Meu computador para a faculdade",
+    "data": "15-05-2026 14:00",
+    "is_temporaria": true,
+    "tempo_vida": 86400,
+    "expira_em": "16-05-2026 14:00",
+    "categoria": "tecnologia"
 }
 ```
 
@@ -76,27 +60,19 @@ O arquivo `galeria.json` deve possuir a seguinte estrutura:
 
 ## ▶️ Como Executar
 
-### 1️⃣ Clone o repositório
+1. **Acesse a pasta do projeto**:
+   ```bash
+   cd Sprint-2--python
+   ```
 
-```bash
-git clone https://github.com/FelZimmer/Sprint-2--python.git
-```
-
-### 2️⃣ Acesse a pasta do projeto
-
-```bash
-cd Sprint-2--python
-```
-
-### 3️⃣ Execute o sistema
-
-```bash
-python main.py
-```
+2. **Execute o sistema**:
+   ```bash
+   python menu.py
+   ```
 
 ---
 
-## 📋 Menu do Sistema
+## 📋 Menu Principal
 
 ```text
 1 - Ver galeria
@@ -105,118 +81,45 @@ python main.py
 4 - Excluir foto
 5 - Foto temporária
 6 - Ver fotos antigas
-7 - Ver lixeira
+7 - Ver Lixeira
 0 - Sair
 ```
 
 ---
 
-## 🔎 Sistema de Pesquisa
+## 🧠 Categorias e Palavras-Chave
 
-O sistema permite pesquisar fotos de duas formas:
-
-### 📌 Por nome ou descrição
-
-Busca fotos utilizando palavras presentes no nome ou descrição.
-
-### 📂 Por categoria
-
-Categorias disponíveis:
-
-* 🐶 Animal
-* 🌳 Natureza
-* 📚 Estudos
-* 🍔 Comida
-* 💻 Tecnologia
-* 📦 Outros
+O sistema utiliza listas pré-definidas para classificar suas fotos automaticamente. Algumas palavras monitoradas:
+*   **Animais**: cachorro, gato, leão, urso, peixe...
+*   **Natureza**: floresta, rio, mar, árvore, sol...
+*   **Estudos**: livro, caderno, escola, faculdade, curso...
+*   **Comida**: pizza, hambúrguer, café, chocolate...
+*   **Tecnologia**: computador, código, celular, python...
 
 ---
 
-## 🧠 Categorias Automáticas
+## ⏳ Gestão de Tempo
 
-O sistema detecta automaticamente a categoria da foto com base no nome e descrição informados pelo usuário.
+### Fotos Temporárias
+Ao adicionar uma foto temporária, você pode escolher entre:
+*   15 segundos (para testes)
+*   1 dia
+*   1 semana
+*   1 mês
+*   1 ano
 
-Exemplo:
-
-```python
-Nome: notebook gamer
-Descrição: computador para estudos
-
-Categoria detectada: tecnologia
-```
-
----
-
-## ⏳ Fotos Temporárias
-
-As fotos temporárias são removidas automaticamente após um determinado tempo utilizando `threading.Timer()`.
-
-### Opções disponíveis:
-
-| Opção | Tempo       |
-| ----- | ----------- |
-| 1     | 1 dia       |
-| 2     | 1 semana    |
-| 3     | 1 mês       |
-| 4     | 1 ano       |
-| 5     | 15 segundos |
-
-Quando removidas, as fotos vão automaticamente para a lixeira.
+### Fotos Antigas
+O sistema permite a **Exclusão em Lote**. Você pode optar por mover para a lixeira todas as fotos de uma categoria específica que tenham mais de **1 ano** de armazenamento.
 
 ---
 
-## 🗑️ Sistema de Lixeira
+## ⚠️ Robustez e Segurança
 
-As fotos excluídas não são apagadas permanentemente imediatamente.
-
-### Funcionalidades:
-
-* ♻️ Recuperar fotos excluídas
-* 🧹 Esvaziar lixeira
-* 📂 Visualizar itens removidos
+*   **Validação de Entrada**: Tratamento para evitar que letras sejam digitadas em campos numéricos.
+*   **Prevenção de Duplicatas**: Não permite adicionar fotos com o mesmo nome.
+*   **Integridade de Dados**: Se o arquivo JSON for deletado ou corrompido, o sistema cria uma nova base de dados automaticamente.
+*   **Loop Seguro**: Operações em listas são feitas em cópias para evitar erros de iteração durante exclusões.
 
 ---
 
-## 📅 Sistema de Fotos Antigas
-
-O sistema identifica fotos armazenadas há muito tempo.
-
-### Classificações:
-
-* 📆 Mais de 3 meses
-* 📆 Mais de 6 meses
-* 📆 Mais de 1 ano
-
-Também é possível excluir automaticamente fotos antigas por categoria.
-
----
-
-## 🖥️ Limpeza do Terminal
-
-O sistema utiliza a biblioteca `os` para limpar automaticamente o terminal durante a navegação:
-
-```python
-os.system("cls" if os.name == "nt" else "clear")
-```
-
-Compatível com:
-
-* Windows (`cls`)
-* Linux/macOS (`clear`)
-
----
-
-## ⚠️ Tratamento de Erros
-
-O projeto possui tratamento de erros para:
-
-* Entrada inválida do usuário
-* Conversão de datas
-* Leitura e escrita do JSON
-* Valores não numéricos no menu
-* Galeria vazia
-* Fotos não encontradas
-
----
-
-# Projeto em desenvolvimento ⚙️
+Desenvolvido para a **Sprint 2** - Computational Thinking with Python. 🚀

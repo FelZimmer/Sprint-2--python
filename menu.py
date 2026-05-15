@@ -3,6 +3,8 @@ import datetime
 import json
 import os
 
+# Listas de palavras-chave para detecção automática de categorias
+
 animais_chave = [
     "animal", "animais", "cachorro", "gato",
     "passaro", "pássaro", "cobra", "coelho",
@@ -64,25 +66,41 @@ tecnologia_chave = [
     "python", "java", "banco de dados", "rede"
 ]
 
+# Mapeamento das categorias para facilitar a seleção nos menus
+CATEGORIAS = {
+    1: "animais",
+    2: "natureza",
+    3: "estudos",
+    4: "comida",
+    5: "tecnologia",
+    6: "outros"
+}
+
+# Limpa o terminal
 def limpar():
     os.system("cls" if os.name == "nt" else "clear")    
 
+# Carrega os dados do arquivo JSON
 def carregar_dados():
+    default = {"fotos": [], "lixeira": []}
+    if not os.path.exists("galeria.json"):
+        return default
     try:
         with open("galeria.json", "r", encoding="utf-8") as f:
             return json.load(f)
-
     except Exception as e:
         print(f"Erro ao carregar dados: {e}")
+        return default
 
+# Salva o dicionário de dados no arquivo JSON
 def salvar_dados(dados):
     try:
         with open("galeria.json", "w", encoding="utf-8") as f:
             json.dump(dados, f, ensure_ascii=False, indent=4)
-
     except Exception as e:
         print(f"Erro ao salvar dados: {e}")
 
+# Funções de menus
 def menu():
     print("\nBem vindo à galeria do seu celular!\n")
     print("1 - Ver galeria")
@@ -116,6 +134,8 @@ def menu_temporaria():
     print("4 - 1 ano")
     print("5 - 15 segundos")
 
+# Mostra todas as fotos na galeria
+
 def galeria():
     dados = carregar_dados()
 
@@ -130,9 +150,10 @@ def galeria():
             f"\nCategoria: {foto['categoria'].capitalize()}"
             f"\nData: {foto['data']}"
             f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-            f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+            f"\nTempo de vida: {f"{foto['tempo_vida']} segundos" if foto['tempo_vida'] != None else "---"}"
         )
 
+# Interface da lixeira: permite ver, recuperar ou limpar lixeira
 def lixeira():
     dados = carregar_dados()
 
@@ -147,24 +168,41 @@ def lixeira():
             f"\nCategoria: {foto['categoria'].capitalize()}"
             f"\nData: {foto['data']}"
             f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-            f"\nTempo de vida: {'---' if foto['tempo_vida'] is None else f'{foto['tempo_vida']} segundos'}"
+            f"\nTempo de vida: {f"{foto['tempo_vida']} segundos" if foto['tempo_vida'] != None else "---"}"
         )
-    match int(input("\nOpções: \n1 - Esvaziar lixeira \n2 - Recuperar item da lixeira\n3 - Voltar para o menu\nDigite o número: ").lower()):
-        case 1:
+    
+    print("\nOpções:")
+    print("1 - Esvaziar lixeira")
+    print("2 - Recuperar item da lixeira")
+    print("3 - Voltar para o menu")
+    
+    try:
+        opcao = int(input("Digite o número: "))
+        if opcao == 1:
             dados["lixeira"].clear()
             salvar_dados(dados)
             print("Lixeira esvaziada.")
-        case 2:
+        elif opcao == 2:
             nome = input("Digite o nome da foto que deseja recuperar: ").lower()
+            foto_recuperada = None
             for foto in dados["lixeira"]:
                 if foto["foto"].lower() == nome:
-                    dados["fotos"].append(foto)
-                    dados["lixeira"].remove(foto)
-                    salvar_dados(dados)
-                    print(f"Foto '{nome}' recuperada com sucesso!")
-                    return
-        case 3:
+                    foto_recuperada = foto
+                    break
+            
+            if foto_recuperada:
+                dados["fotos"].append(foto_recuperada)
+                dados["lixeira"].remove(foto_recuperada)
+                salvar_dados(dados)
+                print(f"Foto '{nome}' recuperada com sucesso!")
+            else:
+                print("Foto não encontrada na lixeira.")
+        elif opcao == 3:
             return
+        else:
+            print("Opção inválida.")
+    except ValueError:
+        print("Digite apenas números.")
         
 
 def procurar_foto():
@@ -189,17 +227,11 @@ def procurar_foto():
 
                 for foto in dados["fotos"]:
 
-                    nome = foto.get("foto", "").lower()
-                    descricao = foto.get("descricao", "").lower()
+                    nome = foto['foto'].lower()
+                    descricao = foto['descricao'].lower()
 
                     if busca in nome or busca in descricao:
-
-                        tempo = (
-                            "---"
-                            if foto["tempo_vida"] is None
-                            else f"{foto['tempo_vida']} segundos"
-                        )
-
+                        tempo = f"{foto['tempo_vida']} segundos" if foto['tempo_vida'] != None else "---"
                         print(
                             f"\nFoto: {foto['foto'].capitalize()}"
                             f"\nDescrição: {foto['descricao'].capitalize()}"
@@ -208,7 +240,6 @@ def procurar_foto():
                             f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
                             f"\nTempo de vida: {tempo}"
                         )
-
                         encontrada = True
 
                 if not encontrada:
@@ -217,88 +248,27 @@ def procurar_foto():
             case 2:
                 menu_categoria()
                 try:
-                    categoria_escolhida = int(input("Digite o número correspondente à categoria desejada: "))
+                    cat_num = int(input("Digite o número correspondente à categoria desejada: "))
+                    if cat_num not in CATEGORIAS:
+                        print("Opção de categoria inválida.")
+                        return
+                    categoria_escolhida = CATEGORIAS[cat_num]
                     encontrada = False
                     for foto in dados["fotos"]:
-                        if categoria_escolhida == 1 and foto["categoria"] == "animal":
-
+                        if foto["categoria"] == categoria_escolhida:
+                            tempo = f"{foto['tempo_vida']} segundos" if foto['tempo_vida'] != None else "---"
                             print(
                                 f"\nFoto: {foto['foto'].capitalize()}"
                                 f"\nDescrição: {foto['descricao'].capitalize()}"
                                 f"\nCategoria: {foto['categoria'].capitalize()}"
                                 f"\nData: {foto['data']}"
                                 f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
+                                f"\nTempo de vida: {tempo}"
                             )
-
                             encontrada = True
-
-                        elif categoria_escolhida == 2 and foto["categoria"] == "natureza":
-
-                            print(
-                                f"\nFoto: {foto['foto'].capitalize()}"
-                                f"\nDescrição: {foto['descricao'].capitalize()}"
-                                f"\nCategoria: {foto['categoria'].capitalize()}"
-                                f"\nData: {foto['data']}"
-                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
-                            )
-
-                            encontrada = True
-
-                        elif categoria_escolhida == 3 and foto["categoria"] == "estudos":
-
-                            print(
-                                f"\nFoto: {foto['foto'].capitalize()}"
-                                f"\nDescrição: {foto['descricao'].capitalize()}"
-                                f"\nCategoria: {foto['categoria'].capitalize()}"
-                                f"\nData: {foto['data']}"
-                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
-                            )
-
-                            encontrada = True
-
-                        elif categoria_escolhida == 4 and foto["categoria"] == "comida":
-
-                            print(
-                                f"\nFoto: {foto['foto'].capitalize()}"
-                                f"\nDescrição: {foto['descricao'].capitalize()}"
-                                f"\nCategoria: {foto['categoria'].capitalize()}"
-                                f"\nData: {foto['data']}"
-                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
-                            )
-
-                            encontrada = True
-
-                        elif categoria_escolhida == 5 and foto["categoria"] == "tecnologia":
-
-                            print(
-                                f"\nFoto: {foto['foto'].capitalize()}"
-                                f"\nDescrição: {foto['descricao'].capitalize()}"
-                                f"\nCategoria: {foto['categoria'].capitalize()}"
-                                f"\nData: {foto['data']}"
-                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
-                            )
-
-                            encontrada = True
-
-                        elif categoria_escolhida == 6 and foto["categoria"] == "outros":
-
-                            print(
-                                f"\nFoto: {foto['foto'].capitalize()}"
-                                f"\nDescrição: {foto['descricao'].capitalize()}"
-                                f"\nCategoria: {foto['categoria'].capitalize()}"
-                                f"\nData: {foto['data']}"
-                                f"\nTemporária: {'Sim' if foto['is_temporaria'] else 'Não'}"
-                                f"\nTempo de vida: {"---" if foto["tempo_vida"] is None else f"{foto['tempo_vida']} segundos"}"
-                            )
-
-                            encontrada = True
+                    
                     if not encontrada:
-                        print("Nenhuma foto encontrada nessa categoria.")
+                        print(f"Nenhuma foto encontrada na categoria '{categoria_escolhida}'.")
                 except ValueError:
                     print("Digite apenas números.")
             case _:
@@ -306,12 +276,13 @@ def procurar_foto():
     except ValueError:
         print("Digite apenas números.")
     
+# Analisa o nome e descrição para definir uma categoria automaticamente
 def detectar_categoria(nome, descricao):
 
     texto = f"{nome} {descricao}".lower()
 
     categorias = {
-        "animal": animais_chave,
+        "animais": animais_chave,
         "natureza": natureza_chave,
         "estudos": estudos_chave,
         "comida": comida_chave,
@@ -319,55 +290,79 @@ def detectar_categoria(nome, descricao):
     }
 
     for categoria, palavras in categorias.items():
-
         for palavra in palavras:
-
             if palavra in texto:
                 return categoria
 
     return "outros"
 
+# Adiciona uma nova foto na galeria
 def adicionar_foto(nome, descricao, is_temporaria=False, tempo_vida=None):
-
     dados = carregar_dados()
-
+    
     for foto in dados["fotos"]:
-
         if nome.lower() == foto["foto"].lower():
             print("Erro: Já existe uma foto com esse nome.")
             return
 
+    agora = datetime.datetime.now()
+    expira_em = None
+    
+    # Verifica se a foto é temporária e calcula o momento da expiração
+    if is_temporaria and tempo_vida:
+        expira_em = (agora + datetime.timedelta(seconds=tempo_vida)).strftime("%d-%m-%Y %H:%M")
+
     nova_foto = {
-        "foto": nome,
+        "foto": nome.lower(),
         "descricao": descricao,
-        "data": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
+        "data": agora.strftime("%d-%m-%Y %H:%M"),
         "is_temporaria": is_temporaria,
         "tempo_vida": tempo_vida,
+        "expira_em": expira_em,
         "categoria": detectar_categoria(nome, descricao)
     }
 
     dados["fotos"].append(nova_foto)
-
     salvar_dados(dados)
-
     print("Foto adicionada com sucesso!")
 
-
-def excluir_foto(nome, mensagem=None):
-
+# Verifica se alguma foto temporária expirou e move para a lixeira
+def verificar_temporarias():
     dados = carregar_dados()
-
+    agora = datetime.datetime.now()
+    remover = []
+    
     for foto in dados["fotos"]:
-
-        if foto["foto"] == nome:
-
+        if foto["is_temporaria"] == True and foto["expira_em"] != None:
+            expiracao = datetime.datetime.strptime(foto["expira_em"], "%d-%m-%Y %H:%M")
+            if agora >= expiracao:
+                remover.append(foto)
+    
+    # Se houver fotos expiradas, move para a lixeira e salva o arquivo
+    if remover:
+        for foto in remover:
             dados["fotos"].remove(foto)
             dados["lixeira"].append(foto)
+        salvar_dados(dados)
+        print(f"\n{len(remover)} fotos temporárias expiraram e foram apagadas.")
 
+def excluir_foto(nome, mensagem=None, salvar=True):
+    dados = carregar_dados()
+    foto_para_remover = None
+    for foto in dados["fotos"]:
+        if foto["foto"].lower() == nome.lower():
+            foto_para_remover = foto
+            break
+    
+    if foto_para_remover:
+        dados["fotos"].remove(foto_para_remover)
+        dados["lixeira"].append(foto_para_remover)
+        if salvar:
             salvar_dados(dados)
-            if mensagem is not None:
-                print(mensagem)
-            return
+        if mensagem:
+            print(mensagem)
+        return True
+    return False
 
 def foto_temporaria():
 
@@ -403,6 +398,7 @@ def foto_temporaria():
     except ValueError:
         print("Digite apenas números.")
 
+# Analisa e exibe fotos com base no tempo que estão armazenadas
 def calcular_tempo_vida():
 
     dados = carregar_dados()
@@ -416,41 +412,27 @@ def calcular_tempo_vida():
     encontrou_foto_antiga = False
 
     for foto in dados["fotos"]:
-
         data_atual = datetime.datetime.now()
-
         try:
-
-            data_foto = datetime.datetime.strptime(
-                foto["data"],
-                "%d-%m-%Y %H:%M"
-            )
-
+            data_foto = datetime.datetime.strptime(foto["data"], "%d-%m-%Y %H:%M")
         except ValueError:
-
             print(f"Erro ao converter data da foto '{foto['foto']}'.")
             continue
 
         diferenca = (data_atual - data_foto).days
 
+        # Classifica a "idade" da foto
         if diferenca >= 365:
-
             anos = diferenca // 365
             tempo = f"Mais de {anos} ano(s)"
-
         elif diferenca >= 180:
-
             tempo = "Mais de 6 meses"
-
         elif diferenca >= 90:
-
             tempo = "Mais de 3 meses"
-
         else:
             continue
 
         encontrou_foto_antiga = True
-
         print(
             f"\nFoto: {foto['foto'].capitalize()}"
             f"\nDescrição: {foto['descricao'].capitalize()}"
@@ -463,146 +445,75 @@ def calcular_tempo_vida():
         print("Nenhuma foto antiga encontrada.")
         return
     print("\nDeseja apagar as fotos com mais de 1 ano de armazenamento?\n1 - Sim\n2 - Não")
-
     try:
-        match int(input("Digite o número: ")):
-
-            case 1:
-                fotos_para_remover = []
+        escolha = int(input("Digite o número: "))
+        if escolha == 1:
+            menu_categoria()
+            try:
+                cat_num = int(input("Digite o número da categoria que deseja excluir: "))
+                if cat_num not in CATEGORIAS:
+                    print("Categoria inválida.")
+                    return
+                categoria_alvo = CATEGORIAS[cat_num]
+                removidas = 0
                 for foto in dados["fotos"]:
-                    data_atual = datetime.datetime.now()
                     try:
-                        data_foto = datetime.datetime.strptime(
-                            foto["data"],
-                            "%d-%m-%Y %H:%M"
-                        )
+                        data_foto = datetime.datetime.strptime(foto["data"], "%d-%m-%Y %H:%M")
+                        diferenca = (datetime.datetime.now() - data_foto).days
+                        
+                        if diferenca >= 365 and foto["categoria"] == categoria_alvo:
+                            dados["fotos"].remove(foto)
+                            dados["lixeira"].append(foto)
+                            removidas += 1
                     except ValueError:
                         continue
-                    diferenca = (data_atual - data_foto).days
-                    if diferenca >= 365:
-                        fotos_para_remover.append(foto)
-                if not fotos_para_remover:
-                    print("Nenhuma foto com mais de 1 ano encontrada.")
-                    return
-
-                menu_categoria()
-
-                try:
-                    categoria_escolhida = int(
-                        input(
-                            "Digite o número da categoria que deseja excluir: "
-                        )
-                    )
-                    encontrou_categoria = False
-                    cat = ''
-                    for foto in fotos_para_remover:
-
-                        if categoria_escolhida == 1 and foto["categoria"] == "animais":
-                            cat = "animais"
-
-                            excluir_foto(foto["foto"])
-
-                            encontrou_categoria = True
-
-                        elif categoria_escolhida == 2 and foto["categoria"] == "natureza":
-                            cat = "natureza"
-
-                            
-
-                            excluir_foto(foto["foto"])
-
-                            encontrou_categoria = True
-
-                        elif categoria_escolhida == 3 and foto["categoria"] == "estudos":
-                            cat = "estudos"
-
-                            
-
-                            excluir_foto(foto["foto"])
-
-                            encontrou_categoria = True
-
-                        elif categoria_escolhida == 4 and foto["categoria"] == "comida":
-                            cat = "comida"
-
-                            
-
-                            excluir_foto(foto["foto"])
-
-                            encontrou_categoria = True
-
-                        elif categoria_escolhida == 5 and foto["categoria"] == "tecnologia":
-                            cat = "tecnologia"
-
-                            
-
-                            excluir_foto(foto["foto"])
-
-                            encontrou_categoria = True
-
-                        elif categoria_escolhida == 6 and foto["categoria"] == "outros":
-                            cat = "outros"
-
-                            excluir_foto(foto["foto"])
-
-                            encontrou_categoria = True
-
-                    if not encontrou_categoria:
-                        print("Nenhuma foto encontrada nessa categoria.")
-                    elif encontrou_categoria:
-                        print(f"\nCategoria {cat} excluida")
+                
+                if removidas > 0:
+                    salvar_dados(dados)
+                    print(f"\n{removidas} foto(s) da categoria '{categoria_alvo}' movida(s) para a lixeira.")
+                else:
+                    print(f"Nenhuma foto com mais de 1 ano encontrada na categoria '{categoria_alvo}'.")
                         
-                except ValueError:
-
-                    print("Digite apenas números.")             
-            case 2:
-                print("Fotos antigas mantidas.")
-            case _:
-                print("Opção inválida.")
+            except ValueError:
+                print("Digite apenas números.")             
+        elif escolha == 2:
+            print("Fotos antigas mantidas.")
+        else:
+            print("Opção inválida.")
     except ValueError:
-
         print("Digite apenas números.")
 
+# Loop principal do programa
 while True:
-
+    verificar_temporarias()
     limpar()
-
     menu()
 
     try:
         opcao = int(input("\nDigite uma opção: "))
 
         match opcao:
-
             case 1:
                 galeria()
-
             case 2:
                 procurar_foto()
-
             case 3:
                 nome = input("Digite o nome da foto: ")
                 descricao = input("Digite a descrição da foto: ")
-
                 adicionar_foto(nome, descricao)
-
             case 4:
                 nome = input("Digite o nome da foto que deseja excluir: ").lower()
                 mensagem = f"\nFoto '{nome}' excluída com sucesso!"
                 excluir_foto(nome, mensagem)
-
             case 5:
                 foto_temporaria()
-
             case 6:
                 calcular_tempo_vida()
             case 7:
                 lixeira()
-
             case 0:
                 print("Encerrando sistema...")
                 break
-
             case _:
                 print("Opção inválida.")
 

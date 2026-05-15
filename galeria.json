@@ -1,78 +1,96 @@
 {
     "fotos": [
         {
-            "foto": "golden_retriever.jpg",
-            "descricao": "Cachorro correndo no parque",
-            "data": "14-10-2023 16:16",
+            "foto": "cachorro_parque.jpg",
+            "descricao": "Um Golden Retriever brincando no parque",
+            "data": "10-05-2026 14:30",
             "is_temporaria": false,
             "tempo_vida": null,
+            "expira_em": null,
             "categoria": "animais"
         },
         {
-            "foto": "por_do_sol.png",
-            "descricao": "Vista das montanhas ao entardecer",
-            "data": "15-10-2023 18:30",
+            "foto": "cachoeira_azul.png",
+            "descricao": "Uma bela cachoeira com águas cristalinas",
+            "data": "12-05-2026 09:15",
             "is_temporaria": false,
             "tempo_vida": null,
+            "expira_em": null,
             "categoria": "natureza"
         },
         {
-            "foto": "hamburguer_artesanal.jpg",
-            "descricao": "Jantar de sexta-feira",
-            "data": "16-10-2023 21:20",
+            "foto": "projeto_python.png",
+            "descricao": "Print do código de um novo projeto",
+            "data": "14-05-2026 22:10",
             "is_temporaria": false,
             "tempo_vida": null,
-            "categoria": "comida"
-        },
-        {
-            "foto": "setup_gamer.jpg",
-            "descricao": "Novo monitor ultrawide instalado",
-            "data": "17-10-2023 11:00",
-            "is_temporaria": false,
-            "tempo_vida": null,
+            "expira_em": null,
             "categoria": "tecnologia"
         },
         {
-            "foto": "recibo_estacionamento.jpg",
-            "descricao": "Comprovante de pagamento shopping",
-            "data": "17-10-2023 14:15",
+            "foto": "pizza_domingo.jpg",
+            "descricao": "Pizza de calabresa deliciosa",
+            "data": "11-05-2026 20:45",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "expira_em": null,
+            "categoria": "comida"
+        },
+        {
+            "foto": "anotacoes_fisica.jpg",
+            "descricao": "Resumo de física para a prova",
+            "data": "13-05-2026 16:20",
+            "is_temporaria": false,
+            "tempo_vida": null,
+            "expira_em": null,
+            "categoria": "estudos"
+        },
+        {
+            "foto": "cupom_desconto.png",
+            "descricao": "Cupom de 20% no iFood",
+            "data": "15-05-2026 10:00",
             "is_temporaria": true,
-            "tempo_vida": 60,
+            "tempo_vida": 86400,
+            "expira_em": "16-05-2026 10:00",
+            "categoria": "comida"
+        },
+        {
+            "foto": "ingresso_show.jpg",
+            "descricao": "Ingresso para o show de sexta",
+            "data": "14-05-2026 20:00",
+            "is_temporaria": true,
+            "tempo_vida": 604800,
+            "expira_em": "21-05-2026 20:00",
             "categoria": "outros"
         },
         {
-            "foto": "gato_dormindo.png",
-            "descricao": "Fofura tirando um cochilo",
-            "data": "18-10-2023 08:00",
-            "is_temporaria": false,
-            "tempo_vida": null,
-            "categoria": "animais"
+            "foto": "lembrete_estudo.png",
+            "descricao": "Lembrete de entrega de trabalho",
+            "data": "10-05-2026 15:00",
+            "is_temporaria": true,
+            "tempo_vida": 2592000,
+            "expira_em": "10-06-2026 15:00",
+            "categoria": "estudos"
         },
         {
-            "foto": "codigo_python.png",
-            "descricao": "Print do erro no deploy",
-            "data": "18-10-2023 10:30",
-            "is_temporaria": false,
-            "tempo_vida": null,
+            "foto": "licenca_software.jpg",
+            "descricao": "Chave de ativação do Windows",
+            "data": "01-01-2026 00:00",
+            "is_temporaria": true,
+            "tempo_vida": 31536000,
+            "expira_em": "01-01-2027 00:00",
             "categoria": "tecnologia"
-        },
-        {
-            "foto": "salada_frutas.jpg",
-            "descricao": "Café da manhã saudável",
-            "data": "19-10-2023 07:45",
-            "is_temporaria": false,
-            "tempo_vida": null,
-            "categoria": "comida"
         }
     ],
     "lixeira": [
-            {
-                "foto": "recibo_estacionamento.jpg",
-                "descricao": "Comprovante de pagamento shopping",
-                "data": "17-10-2023 14:15",
-                "is_temporaria": false,
-                "tempo_vida": null,
-                "categoria": "outros"
-            }
+        {
+            "foto": "evento_hoje.jpg",
+            "descricao": "Foto de um evento rápido",
+            "data": "15-05-2026 16:20",
+            "is_temporaria": true,
+            "tempo_vida": 15,
+            "expira_em": "15-05-2026 16:20",
+            "categoria": "outros"
+        }
     ]
 }
